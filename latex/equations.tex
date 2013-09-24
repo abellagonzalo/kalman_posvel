@@ -1,0 +1,46 @@
+\documentclass[4pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\title{Classic kalman equations}
+\author{Gonzalo Abella}
+\date{}
+\begin{document}
+  \maketitle
+
+\begin{align}
+  x &= (x_x, x_y, x_{v_x}, x_{v_y}) \\
+  u &= (u_x, u_y, u_{\theta}, u_t, u_\lambda, u_\phi) \\
+  w &= (w_x, w_y, w_{\theta}, w_t, w_\lambda, w_\phi)
+\end{align}
+
+\begin{align}
+  x = x_x \cos(u_\theta-w_\theta) + x_{v_x}(u_t+w_t)\cos(u_\theta-w_\theta) + x_y\sin(u_\theta-w_\theta) - (u_x+w_x) + (u_\lambda+w_\lambda) \\
+  y = x_y \cos(u_\theta-w_\theta) + x_{v_y}(u_t+w_t)\cos(u_\theta-w_\theta) - x_x\sin(u_\theta-w_\theta) - (u_x+w_x) + (u_\lambda+w_\lambda) \\
+  v_x = x_{v_x} (u_\phi+w_\phi) \cos(u_\theta-w_\theta) + x_{v_y} (u_\phi+w_\phi) \sin(u_\theta-w_\theta) \\
+  v_y = x_{v_y} (u_\phi+w_\phi) \cos(u_\theta-w_\theta) - x_{v_x} (u_\phi+w_\phi) \sin(u_\theta-w_\theta)
+\end{align}
+
+\begin{align}
+A =
+  \begin{pmatrix}
+     \cos(u_\theta-w_\theta) &  \sin(u_\theta-w_\theta) & (u_t+w_t)\cos(u_\theta-w_\theta) & 0 \\
+    -\sin(u_\theta-w_\theta) &  \cos(u_\theta-w_\theta) & 0 & (u_t+w_t)\cos(u_\theta-w_\theta) \\
+    0 & 0 & (u_\phi+w_\phi)\cos(u_\theta-w_\theta) & (u_\phi+w_\phi)\sin(u_\theta-w_\theta) \\
+    0 & 0 & (u_\phi+w_\phi)-\sin(u_\theta-w_\theta) & (u_\phi+w_\phi)\cos(u_\theta-w_\theta) 
+  \end{pmatrix}
+\end{align}
+
+\begin{align}
+W =
+  \begin{pmatrix}
+    1 & 0 & \frac{\delta f_1}{\delta w_\theta} & x_{v_x}\cos(u_\theta-w_\theta) & 1 & 0 \\
+    0 & 1 & \frac{\delta f_2}{\delta w_\theta} & x_{v_y}\cos(u_\theta-w_\theta) & 1 & 0 \\
+    0 & 0 & \frac{\delta f_3}{\delta w_\theta} & 0 & 0 & x_{v_x}\cos(u_\theta-w_\theta) + x_{v_y}\sin(u_\theta-w_\theta) \\
+    0 & 0 & \frac{\delta f_4}{\delta w_\theta} & 0 & 0 & x_{v_y}\cos(u_\theta-w_\theta) - x_{v_x}\sin(u_\theta-w_\theta)
+\end{pmatrix}
+\end{align}
+
+\begin{align}
+\end{align}
+
+\end{document}
