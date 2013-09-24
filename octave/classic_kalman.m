@@ -1,5 +1,24 @@
-disp ("Classic kalman")
-disp ("--------------")
+The MIT License (MIT)
+
+Copyright (c) 2013 abellagonzalo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 ######
 # f1 #
@@ -95,6 +114,25 @@ endfunction
 
 function ret = df4_dxvy(x, u, w)
   ret = cos(u(3)+w(3)) * (u(6)+w(6));
+endfunction
+
+#####
+# f #
+#####
+
+function ret = f(x, u, w)
+  ret = [f1(x,u,w); f2(x,u,w); f3(x,u,w); f4(x,u,w)];
+endfunction
+
+#####
+# A #
+#####
+
+function ret = A(x, u, w)
+  ret = [df1_dxx(x, u, w), df1_dxy(x, u, w), df1_dxvx(x, u, w), df1_dxvy(x, u, w);
+         df2_dxx(x, u, w), df2_dxy(x, u, w), df2_dxvx(x, u, w), df2_dxvy(x, u, w);
+         df3_dxx(x, u, w), df3_dxy(x, u, w), df3_dxvx(x, u, w), df3_dxvy(x, u, w);
+         df4_dxx(x, u, w), df4_dxy(x, u, w), df4_dxvx(x, u, w), df4_dxvy(x, u, w)];
 endfunction
 
 #################################################
