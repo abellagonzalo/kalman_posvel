@@ -95,6 +95,30 @@ function ret = df2_dxvy(x, u, w)
   ret = (u(4)+w(4)) * cos(u(3)+w(3));
 endfunction
 
+function ret = df2_dwx(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df2_dwy(x, u, w)
+  ret = -1;
+endfunction
+
+function ret = df2_dwo(x, u, w)
+  ret = -x(2)*sin(u(3)+w(3)) - x(4)*(u(4)+w(4))*sin(u(3)+w(3)) - x(1)*cos(u(3)+w(3));
+endfunction
+
+function ret = df2_dwt(x, u, w)
+  ret = x(4)*cos(u(3)+w(3));
+endfunction
+
+function ret = df2_dwj(x, u, w)
+  ret = 1;
+endfunction
+
+function ret = df2_dwk(x, u, w)
+  ret = 0;
+endfunction
+
 ######
 # f3 #
 ######
@@ -117,6 +141,30 @@ endfunction
 
 function ret = df3_dxvy(x, u, w)
   ret = sin(u(3)+w(3)) * (u(6)+w(6));
+endfunction
+
+function ret = df3_dwx(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df3_dwy(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df3_dwo(x, u, w)
+  ret = -x(3)*sin(u(3)+w(3))*(u(6)+w(6)) + x(4)*cos(u(3)+w(3))*(u(6)+w(6));
+endfunction
+
+function ret = df3_dwt(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df3_dwj(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df3_dwk(x, u, w)
+  ret = x(3)*cos(u(3)+w(3)) + x(4)*sin(u(3)+w(3));
 endfunction
 
 ######
@@ -143,6 +191,30 @@ function ret = df4_dxvy(x, u, w)
   ret = cos(u(3)+w(3)) * (u(6)+w(6));
 endfunction
 
+function ret = df4_dwx(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df4_dwy(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df4_dwo(x, u, w)
+  ret = -x(4)*sin(u(3)+w(3))*(u(6)+w(6)) - x(3)*cos(u(3)+w(3))*(u(6)+w(6));
+endfunction
+
+function ret = df4_dwt(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df4_dwj(x, u, w)
+  ret = 0;
+endfunction
+
+function ret = df4_dwk(x, u, w)
+  ret = x(4)*cos(u(3)+w(3)) - x(3)*sin(u(3)+w(3));
+endfunction
+
 #####
 # f #
 #####
@@ -161,6 +233,65 @@ function ret = A(x, u, w)
          df3_dxx(x, u, w), df3_dxy(x, u, w), df3_dxvx(x, u, w), df3_dxvy(x, u, w);
          df4_dxx(x, u, w), df4_dxy(x, u, w), df4_dxvx(x, u, w), df4_dxvy(x, u, w)];
 endfunction
+
+#####
+# W #
+#####
+
+function ret = W(x, u, w)
+  ret = [df1_dwx(x, u, w), df1_dwy(x, u, w), df1_dwo(x, u, w), df1_dwt(x, u, w), df1_dwj(x, u, w), df1_dwk(x, u, w);
+         df2_dwx(x, u, w), df2_dwy(x, u, w), df2_dwo(x, u, w), df2_dwt(x, u, w), df2_dwj(x, u, w), df2_dwk(x, u, w);
+         df3_dwx(x, u, w), df3_dwy(x, u, w), df3_dwo(x, u, w), df3_dwt(x, u, w), df3_dwj(x, u, w), df3_dwk(x, u, w);
+         df4_dwx(x, u, w), df4_dwy(x, u, w), df4_dwo(x, u, w), df4_dwt(x, u, w), df4_dwj(x, u, w), df4_dwk(x, u, w)];
+endfunction
+
+#####
+# Q #
+#####
+
+function ret = Q(w)
+  ret = [w(1), 0, 0, 0, 0, 0;
+         0, w(2), 0, 0, 0, 0;
+         0, 0, w(3), 0, 0, 0;
+         0, 0, 0, w(4), 0, 0;
+         0, 0, 0, 0, w(5), 0;
+         0, 0, 0, 0, 0, w(6)];
+endfunction
+
+#####
+# h #
+#####
+
+function ret = h(x, v)
+  ret = [x(1) + v(1); x(2) + v(2)];
+endfunction
+
+#####
+# H #
+#####
+
+function ret = H(x, v)
+  ret = [1, 0, 0, 0;
+         0, 1, 0, 0];
+endfunction
+
+#####
+# V #
+#####
+
+function ret = V(x, v)
+  ret = eye(2);
+endfunction
+
+#####
+# R #
+#####
+
+function ret = R(v)
+  ret = [v(1), 0;
+         0, v(2)];
+endfunction
+
 
 #################################################
 # Newtons difference quotient. Used for testing #
@@ -215,7 +346,7 @@ endfunction
 %! x = [800; 1200; 567; 100];
 %! u = [832; 1358; 0.12; 1/30; 0.1; 0.9];
 %! w = [100; 234; 234; 94; 245; 456];
-%! h = 0.0001;
+%! h = 0.00001;
 
 %!test assert (  df1_dxx(x, u, w),  lim_xx(@f1, x, u, w, h), h );
 %!test assert (  df1_dxy(x, u, w),  lim_xy(@f1, x, u, w, h), h );
@@ -224,7 +355,7 @@ endfunction
 
 %!test assert ( df1_dwx(x, u, w), lim_wx(@f1, x, u, w, h), h );
 %!test assert ( df1_dwy(x, u, w), lim_wy(@f1, x, u, w, h), h );
-%!test assert ( df1_dwo(x, u, w), lim_wo(@f1, x, u, w, h), h+0.14 );
+%!test assert ( df1_dwo(x, u, w), lim_wo(@f1, x, u, w, h), h+0.014 );
 %!test assert ( df1_dwt(x, u, w), lim_wt(@f1, x, u, w, h), h );
 %!test assert ( df1_dwj(x, u, w), lim_wj(@f1, x, u, w, h), h );
 %!test assert ( df1_dwk(x, u, w), lim_wk(@f1, x, u, w, h), h );
@@ -234,12 +365,33 @@ endfunction
 %!test assert ( df2_dxvx(x, u, w), lim_xvx(@f2, x, u, w, h), h );
 %!test assert ( df2_dxvy(x, u, w), lim_xvy(@f2, x, u, w, h), h );
 
+%!test assert ( df2_dwx(x, u, w), lim_wx(@f2, x, u, w, h), h );
+%!test assert ( df2_dwy(x, u, w), lim_wy(@f2, x, u, w, h), h );
+%!test assert ( df2_dwo(x, u, w), lim_wo(@f2, x, u, w, h), h+0.014 );
+%!test assert ( df2_dwt(x, u, w), lim_wt(@f2, x, u, w, h), h );
+%!test assert ( df2_dwj(x, u, w), lim_wj(@f2, x, u, w, h), h );
+%!test assert ( df2_dwk(x, u, w), lim_wk(@f2, x, u, w, h), h );
+
 %!test assert (  df3_dxx(x, u, w),  lim_xx(@f3, x, u, w, h), h );
 %!test assert (  df3_dxy(x, u, w),  lim_xy(@f3, x, u, w, h), h );
 %!test assert ( df3_dxvx(x, u, w), lim_xvx(@f3, x, u, w, h), h );
 %!test assert ( df3_dxvy(x, u, w), lim_xvy(@f3, x, u, w, h), h );
 
+%!test assert ( df3_dwx(x, u, w), lim_wx(@f3, x, u, w, h), h );
+%!test assert ( df3_dwy(x, u, w), lim_wy(@f3, x, u, w, h), h );
+%!test assert ( df3_dwo(x, u, w), lim_wo(@f3, x, u, w, h), h+0.14 );
+%!test assert ( df3_dwt(x, u, w), lim_wt(@f3, x, u, w, h), h );
+%!test assert ( df3_dwj(x, u, w), lim_wj(@f3, x, u, w, h), h );
+%!test assert ( df3_dwk(x, u, w), lim_wk(@f3, x, u, w, h), h );
+
 %!test assert (  df4_dxx(x, u, w),  lim_xx(@f4, x, u, w, h), h );
 %!test assert (  df4_dxy(x, u, w),  lim_xy(@f4, x, u, w, h), h );
 %!test assert ( df4_dxvx(x, u, w), lim_xvx(@f4, x, u, w, h), h );
 %!test assert ( df4_dxvy(x, u, w), lim_xvy(@f4, x, u, w, h), h );
+
+%!test assert ( df4_dwx(x, u, w), lim_wx(@f4, x, u, w, h), h );
+%!test assert ( df4_dwy(x, u, w), lim_wy(@f4, x, u, w, h), h );
+%!test assert ( df4_dwo(x, u, w), lim_wo(@f4, x, u, w, h), h+1.31 );
+%!test assert ( df4_dwt(x, u, w), lim_wt(@f4, x, u, w, h), h );
+%!test assert ( df4_dwj(x, u, w), lim_wj(@f4, x, u, w, h), h );
+%!test assert ( df4_dwk(x, u, w), lim_wk(@f4, x, u, w, h), h );
