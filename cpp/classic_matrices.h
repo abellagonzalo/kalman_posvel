@@ -1,6 +1,5 @@
 #include "Matrix.h"
 #include <cmath>
-#include <boost/function.hpp>
 
 namespace kalman {
 

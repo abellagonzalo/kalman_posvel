@@ -43,7 +43,7 @@ MatrixCM::MatrixCM(int rows, int columns)
   mat = new double[r_*c_];//(double*)malloc(r_*c_*sizeof(double));
 }
 
-MatrixCM::MatrixCM(int rows, int columns, float *m)
+MatrixCM::MatrixCM(int rows, int columns, double *m)
 {
   r_ = rows;
   c_ = columns;
@@ -91,15 +91,21 @@ MatrixCM::~MatrixCM()
   if(mat) delete [] mat;
 }
 
-void MatrixCM::CopyData(float *data)
-{
-  for (double *ptr = mat; ptr < mat + r_ * c_; ptr++)
-    *data++ = (float) (*ptr++);
-}
-
 void MatrixCM::CopyData(double *data)
 {
   memcpy(data, mat, r_ * c_ * sizeof(double));
+}
+
+bool MatrixCM::operator==(const MatrixCM& rhs) const
+{
+  return nrows() == rhs.nrows() 
+      && ncols() == rhs.ncols()
+      && std::equal(mat, mat + nrows() * ncols(), rhs.mat);
+}
+
+bool MatrixCM::operator!=(const MatrixCM& rhs) const
+{
+  return !(*this == rhs);
 }
 
 const MatrixCM& MatrixCM::operator= (const MatrixCM& other)
@@ -130,16 +136,6 @@ const MatrixCM& MatrixCM::operator= (char* const init_string)
 }
 
 MatrixCM &MatrixCM::set(double const *data)
-{
-  for (int i = 0; i < r_; i++) {
-    for (int j = 0; j < c_; j++) {
-      e(i,j) = data[i * c_ + j];
-    }
-  }
-  return (*this);
-}
-
-MatrixCM &MatrixCM::set(float const *data)
 {
   for (int i = 0; i < r_; i++) {
     for (int j = 0; j < c_; j++) {

@@ -1,4 +1,5 @@
 #include "classic_matrices.h"
+#include <boost/function.hpp>
 
 /******************************
 * Newtons difference quotient *

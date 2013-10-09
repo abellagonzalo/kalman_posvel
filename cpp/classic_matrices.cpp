@@ -215,12 +215,12 @@ namespace kalman {
     }
 
     MatrixCM f(const MatrixCM& x, const MatrixCM& u, const MatrixCM& w) {
-      float values [4] = { f1(x, u, w), f2(x, u, w), f3(x, u, w), f4(x, u, w) };
+      double values [4] = { f1(x, u, w), f2(x, u, w), f3(x, u, w), f4(x, u, w) };
       return MatrixCM(4,1,values);
     }
 
     MatrixCM A(const MatrixCM& x, const MatrixCM& u, const MatrixCM& w) {
-      float values [16] = { df1_dxx(x, u, w), df1_dxy(x, u, w), df1_dxvx(x, u, w), df1_dxvy(x, u, w),
+      double values [16] = { df1_dxx(x, u, w), df1_dxy(x, u, w), df1_dxvx(x, u, w), df1_dxvy(x, u, w),
                             df2_dxx(x, u, w), df2_dxy(x, u, w), df2_dxvx(x, u, w), df2_dxvy(x, u, w),
                             df3_dxx(x, u, w), df3_dxy(x, u, w), df3_dxvx(x, u, w), df3_dxvy(x, u, w),
                             df4_dxx(x, u, w), df4_dxy(x, u, w), df4_dxvx(x, u, w), df4_dxvy(x, u, w) };
@@ -228,7 +228,7 @@ namespace kalman {
     }
 
     MatrixCM W(const MatrixCM& x, const MatrixCM& u, const MatrixCM& w) {
-      float values [24] = { df1_dwx(x, u, w), df1_dwy(x, u, w), df1_dwo(x, u, w), df1_dwt(x, u, w), df1_dwj(x, u, w), df1_dwk(x, u, w),
+      double values [24] = { df1_dwx(x, u, w), df1_dwy(x, u, w), df1_dwo(x, u, w), df1_dwt(x, u, w), df1_dwj(x, u, w), df1_dwk(x, u, w),
                             df2_dwx(x, u, w), df2_dwy(x, u, w), df2_dwo(x, u, w), df2_dwt(x, u, w), df2_dwj(x, u, w), df2_dwk(x, u, w),
                             df3_dwx(x, u, w), df3_dwy(x, u, w), df3_dwo(x, u, w), df3_dwt(x, u, w), df3_dwj(x, u, w), df3_dwk(x, u, w),
                             df4_dwx(x, u, w), df4_dwy(x, u, w), df4_dwo(x, u, w), df4_dwt(x, u, w), df4_dwj(x, u, w), df4_dwk(x, u, w) }; 
@@ -236,7 +236,7 @@ namespace kalman {
     }
 
     MatrixCM Q(const MatrixCM& w) {
-      float values [36] = { w.e(0), 0, 0, 0, 0, 0,
+      double values [36] = { w.e(0), 0, 0, 0, 0, 0,
                             0, w.e(1), 0, 0, 0, 0,
                             0, 0, w.e(2), 0, 0, 0,
                             0, 0, 0, w.e(3), 0, 0,
@@ -246,13 +246,13 @@ namespace kalman {
     }
 
     MatrixCM h(const MatrixCM& x, const MatrixCM& v) {
-      float values [2] = { x.e(0) + v.e(0), 
+      double values [2] = { x.e(0) + v.e(0), 
                            x.e(1) + v.e(1) };
       return MatrixCM(2,1,values);
     }
 
     MatrixCM H(const MatrixCM& x, const MatrixCM& v) {
-      float values [8] = { 1., 0., 0., 0.,  
+      double values [8] = { 1., 0., 0., 0.,  
                            0., 1., 0., 0. };
       return MatrixCM(2,4,values);
     }
@@ -262,7 +262,7 @@ namespace kalman {
     }
 
     MatrixCM R(const MatrixCM& v) {
-      float values [4] = { v.e(0), 0, 
+      double values [4] = { v.e(0), 0, 
                            0, v.e(1) };
       return MatrixCM(2,2,values);
     }

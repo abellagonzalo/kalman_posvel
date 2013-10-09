@@ -41,7 +41,7 @@ class MatrixCM {
 public:
   MatrixCM(char* const init_string);
   MatrixCM(int rows, int columns);
-  MatrixCM(int rows, int columns, float *m);
+  MatrixCM(int rows, int columns, double *m);
 
   // this makes an identity matrix
   MatrixCM(int identity_size);
@@ -53,9 +53,7 @@ public:
   ~MatrixCM();
 
   MatrixCM & set(double const *data);
-  MatrixCM & set(float const *data);
 
-  void CopyData(float *data);
   void CopyData(double *data);
 
   double determinant() const;
@@ -63,6 +61,9 @@ public:
   const MatrixCM& operator= (const MatrixCM& other);
 
   const MatrixCM& operator= (char* const init_string);
+
+  bool operator==(const MatrixCM& rhs) const;
+  bool operator!=(const MatrixCM& rhs) const;
 
   friend const MatrixCM operator+ (const MatrixCM& a, const MatrixCM& b);
   friend const MatrixCM operator- (const MatrixCM& a, const MatrixCM& b);
